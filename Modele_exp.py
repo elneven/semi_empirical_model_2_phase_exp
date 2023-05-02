@@ -18,8 +18,6 @@ import sympy as sp
 #             h_thr_su - PropsSI('H', 'P', P_su1, 'S', s_su, Fluid),
 #             m_dot_r**2 - (A_su/v_thr_su)**2 * (2*(h_su-h_thr_su))]
 
-"fsolve"
-
 
 "Datas"
 # Measured input datas (done like Nicolas)
@@ -64,10 +62,29 @@ v_su = 1./PropsSI('D', 'P', P_su, 'T', T_su, Fluid)
 #Je sais pas encore comment faire: pour l'instant su1=su
 # Déterminer m_dot_r!!!
 
-# gamma_su=1.4
-# d_su = 0.0008 #GUESSS
-# A_su = np.pi*(d_su/2)**2
-# P_crit_su = P_su*(2/(gamma_su+1))**(gamma_su/(gamma_su-1))
+#---------------------
+m_dot = 0.102 #-> a enlever!!!
+P_su1 = P_su*1.03
+#--------------------
+
+gamma_su=1.4
+d_su = 0.0008 #GUESSS
+A_su = np.pi*(d_su/2)**2
+P_crit_su = P_su*(2/(gamma_su+1))**(gamma_su/(gamma_su-1))
+P_thr_su = max(P_crit_su, P_su1)
+
+h_thr_su = PropsSI('H', 'P', P_thr_su, 'S', s_su, Fluid)
+v_thr_su = 1./PropsSI('D', 'P', P_thr_su, 'S', s_su, Fluid)
+V_dot_su = m_dot*v_thr_su
+C_thr_su = V_dot_su/A_su
+
+h_thr_su = h_su - (C_thr_su**2)/2
+
+h_su1 = h_su
+s_su1 = PropsSI('S', 'H', h_su1, 'P', P_su1, Fluid)
+v_su1 = 1./PropsSI('D', 'H', h_su1, 'P', P_su1, Fluid)
+T_su1 = PropsSI('T', 'H', h_su1, 'P', P_su1, Fluid)
+c_su1 = PropsSI('Cvmass', 'H', h_su1, 'P', P_su1, Fluid)
 
 # h_su1 = h_su #vanne isenthalpique
 # g = lambda variables: f(variables, s_su, m_dot_r, A_su, h_su)
@@ -81,23 +98,6 @@ v_su = 1./PropsSI('D', 'P', P_su, 'T', T_su, Fluid)
 # # C_thr_ex = np.sqrt(2*(h_su-h_thr_su))
 
 # # h_su1 = h_thr_su + (C_thr_su**2)/2
-
-
-h_su1 = h_su
-s_su1 = s_su
-c_su1 = c_su
-v_su1 = v_su
-T_su1 = T_su
-P_su1 = P_su
-
-
-# V_dot_ex=M_dot*v_thr_ex
-# "M_dot_ex=A_ex*((C_thr_ex^2)/2)/v_thr_ex"
-# C_thr_ex=V_dot_ex/A_ex
-# "T_ex=T_ex_meas"
-# "A_ex=0,0001"
-# s_ex=entropy(Fluid$; P=P_ex; h=h_ex)
-# T_ex=temperature(Fluid$; P=P_ex; h=h_ex)
 
 
 
