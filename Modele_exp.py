@@ -60,9 +60,9 @@ N_n = 2000/60
 "1. Admission states: su"
 #Faux pcq fluid à deux phase -> mettre X 
 h_su = PropsSI('H', 'P', P_su, 'T', T_su, Fluid)
-s_su = PropsSI('S', 'P', P_su, 'T', T_su, Fluid)
-c_su = PropsSI('Cvmass', 'P', P_su, 'T', T_su, Fluid)
-v_su = 1./PropsSI('D', 'P', P_su, 'T', T_su, Fluid)
+s_su = PropsSI('S', 'P', P_su, 'H', h_su, Fluid)
+c_su = PropsSI('Cvmass', 'P', P_su, 'H', h_su, Fluid)
+v_su = 1./PropsSI('D', 'P', P_su, 'H', h_su, Fluid)
 
 "2. Supply pressure drop: su->su1"
 #Je sais pas encore comment faire: pour l'instant su1=su
@@ -70,25 +70,18 @@ v_su = 1./PropsSI('D', 'P', P_su, 'T', T_su, Fluid)
 
 #---------------------
 m_dot = 0.102 #-> a enlever!!!
-P_su1 = P_su*1.03
+v_su1 = v_su #-> a enlever?
 #--------------------
-
-gamma_su=1.4
-d_su = 0.0008 #GUESSS
+d_su = 0.2 #GUESSS
 A_su = np.pi*(d_su/2)**2
-P_crit_su = P_su*(2/(gamma_su+1))**(gamma_su/(gamma_su-1))
-P_thr_su = max(P_crit_su, P_su1)
 
-h_thr_su = PropsSI('H', 'P', P_thr_su, 'S', s_su, Fluid)
-v_thr_su = 1./PropsSI('D', 'P', P_thr_su, 'S', s_su, Fluid)
-V_dot_su = m_dot*v_thr_su
-C_thr_su = V_dot_su/A_su
+V_dot_su1 = m_dot*v_su1
+C_su1 = V_dot_su1/A_su
 
-h_thr_su = h_su - (C_thr_su**2)/2
+h_su1 = h_su - (C_su1**2)/2
 
-h_su1 = h_su
-s_su1 = PropsSI('S', 'H', h_su1, 'P', P_su1, Fluid)
-v_su1 = 1./PropsSI('D', 'H', h_su1, 'P', P_su1, Fluid)
+P_su1 = PropsSI('P', 'H', h_su1, 'S', s_su, Fluid)
+
 T_su1 = PropsSI('T', 'H', h_su1, 'P', P_su1, Fluid)
 c_su1 = PropsSI('Cvmass', 'H', h_su1, 'P', P_su1, Fluid)
 
